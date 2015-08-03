@@ -16,6 +16,7 @@
 
 package com.example.chenleicpp.netdemo.http;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -25,6 +26,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 /**
  * Class for all gson response parsed GET requests.
@@ -53,18 +55,26 @@ public class GsonGetRequest<T> extends Request<T> {
      * @param url      URL of the request to make.
      * @param classOfT Relevant class object, for Gson's reflection.
      */
-    public GsonGetRequest(String url, Class<T> classOfT,
+
+    private final Map<String,String> mParams;
+
+    public GsonGetRequest(String url, Class<T> classOfT,Map<String,String> params,
                           Response.Listener<T> listener, Response.ErrorListener errorListener) {
-        super(Method.GET, url, errorListener);
+        super(Method.POST, url, errorListener);
         mClassOfT = classOfT;
         mListener = listener;
+        mParams = params;
     }
 
-    // Only works with POST and PUT.
-//    @Override
-//    public Map<String, String> getParams() throws AuthFailureError {
-//        return mParams != null ? mParams : super.getParams();
-//    }
+    /**
+     * Only works with POST and PUT.
+     * @return
+     * @throws AuthFailureError
+     */
+    @Override
+    public Map<String, String> getParams() throws AuthFailureError {
+        return mParams != null ? mParams : super.getParams();
+    }
 
     @Override
     protected void deliverResponse(T response) {
@@ -80,8 +90,8 @@ public class GsonGetRequest<T> extends Request<T> {
 
             // NOTE :: Cache anyway regardless of server response cache headers.
             Cache.Entry cacheEntry = HttpHeaderParser.parseIgnoreCacheHeaders(response);
-
             return Response.success(mGson.fromJson(json, mClassOfT), cacheEntry);
+
         } catch (UnsupportedEncodingException e) {
             return Response.error(new ParseError(e));
         } catch (JsonSyntaxException e) {

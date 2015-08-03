@@ -1,75 +1,56 @@
 package com.example.chenleicpp.netdemo.ui;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.example.chenleicpp.netdemo.NetApplication;
 import com.example.chenleicpp.netdemo.R;
-import com.example.chenleicpp.netdemo.http.GsonGetRequest;
+import com.example.chenleicpp.netdemo.api.RemoteApi;
 import com.example.chenleicpp.netdemo.model.CategoryList;
 import com.example.chenleicpp.netdemo.model.NewsList;
 
-import java.util.HashMap;
-import java.util.Map;
+import butterknife.Bind;
+import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
+
+    @Bind(R.id.btn_no_param)
+    Button mBtnNoParam;
+    @Bind(R.id.btn_with_param)
+    Button mBtnWithParam;
+    @Bind(R.id.tv_content)
+    TextView mTvContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        //getTestRequest1();
-        getTestRequest2();
     }
 
-    private void getTestRequest2() {
-        //http://testweb.timeerp.com/mobile/getWjtcList.asp?type=5&page_num=1&page_size=5
-        String url = "http://testweb.timeerp.com/mobile/getWjtcList.asp";
-        GsonGetRequest<NewsList> request = new GsonGetRequest<NewsList>(url, NewsList.class,
-                new Response.Listener<NewsList>() {
-                    @Override
-                    public void onResponse(NewsList response) {
-                        Log.i("chenleicpp",response.toString());
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_main;
+    }
 
-            }
-        }){
+    private Response.Listener<CategoryList> responseListener(){
+        return new Response.Listener<CategoryList>() {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> map = new HashMap<>();
-                map.put("type","5");
-                map.put("page_num","1");
-                map.put("page_size","5");
-                return map;
+            public void onResponse(CategoryList response) {
+                mTvContent.setText(response.toString());
             }
         };
-        NetApplication.addToRequestQueue(this,request);
     }
 
-    private void getTestRequest1() {
-        String url = "http://testweb.timeerp.com/mobile/getNavigation.asp";
-        GsonGetRequest<CategoryList> gRequest = new GsonGetRequest<CategoryList>(url, CategoryList.class,
-                new Response.Listener<CategoryList>() {
-                    @Override
-                    public void onResponse(CategoryList response) {
-                        Log.i("chenleicpp",response.toString());
-                    }
-                }, new Response.ErrorListener() {
+    private Response.Listener<NewsList> responseListener2(){
+        return new Response.Listener<NewsList>() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-
+            public void onResponse(NewsList response) {
+                mTvContent.setText(response.toString());
             }
-        });
-        NetApplication.addToRequestQueue(this,gRequest);
+        };
     }
 
     @Override
@@ -92,5 +73,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @OnClick({R.id.btn_no_param,R.id.btn_with_param})
+    public void testPost(View view) {
+        switch (view.getId()){
+            case R.id.btn_no_param:
+                RemoteApi.getNavigation(responseListener());
+                break;
+            case R.id.btn_with_param:
+                RemoteApi.getWjtcList(responseListener2(),"5","5","1");
+                break;
+        }
     }
 }

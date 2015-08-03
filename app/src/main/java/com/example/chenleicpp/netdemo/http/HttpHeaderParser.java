@@ -48,6 +48,7 @@ public class HttpHeaderParser extends com.android.volley.toolbox.HttpHeaderParse
 
         return entry;
     }
+
     public static String parseCharset(Map<String, String> headers) {
         return parseCharset(headers, HttpConstants.DEFAULT_CHARSET);
     }

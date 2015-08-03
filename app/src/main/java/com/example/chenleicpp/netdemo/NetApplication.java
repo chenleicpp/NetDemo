@@ -17,9 +17,15 @@ public class NetApplication extends Application {
 
     private static RequestQueue mRequestQueue;
     public static final String DEFAULT_REQUEST_TAG = "VolleyRequest";
+    private static NetApplication mInstance;
     @Override
     public void onCreate() {
         super.onCreate();
+        mInstance = this;
+    }
+
+    public static NetApplication getInstance(){
+        return mInstance;
     }
 
     public static void initVolley(Context context){
@@ -49,6 +55,8 @@ public class NetApplication extends Application {
     public static <T> void addToRequestQueue(Context context, Request<T> request) {
         // Use default request tag.
         request.setTag(DEFAULT_REQUEST_TAG);
+
+        VolleyLog.d("Adding request to queue: %s", request.getUrl());
 
         getRequestQueue(context).add(request);
     }
