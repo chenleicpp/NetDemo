@@ -13,6 +13,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.example.chenleicpp.netdemo.NetApplication;
 import com.example.chenleicpp.netdemo.http.GsonGetRequest;
+import com.example.chenleicpp.netdemo.http.HttpConstants;
 import com.example.chenleicpp.netdemo.model.CategoryList;
 import com.example.chenleicpp.netdemo.model.NewsList;
 
@@ -23,9 +24,6 @@ import java.util.Map;
  * Created by chenleicpp on 2015/8/3.
  */
 public class RemoteApi {
-
-    public final static String HOST = "testweb.timeerp.com";
-    private static String API_URL = "http://testweb.timeerp.com/mobile/%s";
 
     public static void getNavigation(Response.Listener<CategoryList> listener){
         String navigationUrl = "getNavigation.asp";
@@ -46,8 +44,7 @@ public class RemoteApi {
     }
 
     private static String getAbsoluteApiUrl(String partUrl) {
-        String url = String.format(API_URL, partUrl);
-        Log.d("BASE_CLIENT", "request:" + url);
+        String url = String.format(HttpConstants.API_URL, partUrl);
         return url;
     }
 

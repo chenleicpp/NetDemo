@@ -23,12 +23,8 @@ package com.example.chenleicpp.netdemo.http;
  */
 public class HttpConstants {
 
-    public static final String BASE_URL = "http://www.panoramio.com/map/get_panoramas.php";// ?set=public&from=0&to=20
-
-    public static final String PHOTOS_URL = BASE_URL;
-
-    public static final String LOGIN_PATH = "auth";
-
     public static final String DEFAULT_CHARSET = "gb2312";
+
+    public static String API_URL = "http://testweb.timeerp.com/mobile/%s";
 
 }

@@ -44,14 +44,12 @@ public class MainActivity extends BaseActivity {
         };
     }
 
-    private Response.Listener<NewsList> responseListener2(){
-        return new Response.Listener<NewsList>() {
-            @Override
-            public void onResponse(NewsList response) {
-                mTvContent.setText(response.toString());
-            }
-        };
-    }
+    private Response.Listener<NewsList> getWjtcList = new Response.Listener<NewsList>() {
+        @Override
+        public void onResponse(NewsList response) {
+            mTvContent.setText(response.toString());
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -82,7 +80,7 @@ public class MainActivity extends BaseActivity {
                 RemoteApi.getNavigation(responseListener());
                 break;
             case R.id.btn_with_param:
-                RemoteApi.getWjtcList(responseListener2(),"5","5","1");
+                RemoteApi.getWjtcList(getWjtcList,"5","5","1");
                 break;
         }
     }
